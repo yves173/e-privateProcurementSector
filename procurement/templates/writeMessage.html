@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Read Messages</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../static/dash/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../static/dash/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../static/dash/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../static/dash/assets/images/favicon.png" />
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+            </div>
+            <ul class="nav">
+                <li class="nav-item profile">
+                    <div class="profile-desc">
+                        <div class="profile-pic">
+                            <div class="count-indicator">
+                                <img class="img-xs rounded-circle " src="../static/dash/assets/images/faces/face0.jpg" alt="">
+                                <span class="count bg-success"></span>
+                            </div>
+                            <div class="profile-name">
+                                {%if status=='company'%}
+                                <h5 class="mb-0 font-weight-normal">{{theUser['cname']}}</h5>
+                                {%else%}
+                                <h5 class="mb-0 font-weight-normal">{{theUser['fname']}}</h5>
+                                {%endif%}
+                                <span>{{status}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+                <li class="nav-item nav-category">
+                    <span class="nav-link">Navigation</span>
+                </li>
+                <li class="nav-item menu-items">
+                    {%if status=='company'%}
+                    <a class="nav-link" href="{{url_for('companyDashboard')}}">
+                    {%elif status=='admin'%}
+                    <a class="nav-link" href="{{url_for('adminDashboard')}}">
+                    {%elif status=='supplier'%}
+                    <a class="nav-link" href="{{url_for('supplierDashboard')}}">
+                    {%endif%}
+                        <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+
+
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_navbar.html -->
+            <nav class="navbar p-0 fixed-top d-flex flex-row">
+                <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+                </div>
+                <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+              <span class="mdi mdi-menu"></span>
+            </button>
+                    <ul class="navbar-nav w-100">
+
+                    </ul>
+                    <ul class="navbar-nav navbar-nav-right">
+
+                        <li class="nav-item nav-settings d-none d-lg-block">
+                            <a class="nav-link" href="#">
+                                <i class="mdi mdi-view-grid"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
+                                <div class="navbar-profile">
+                                    <img class="img-xs rounded-circle" src="../static/dash/assets/images/faces/face0.jpg" alt="">
+                                    <p class="mb-0 d-none d-sm-block navbar-profile-name">
+                                        {%if status=='company'%} {{theUser['cname']}} {%else%} {{theUser['fname']}} {%endif%}
+                                    </p>
+                                    <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
+                                <h6 class="p-3 mb-0">Profile</h6>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item preview-item" href="{{url_for('logout')}}">
+                                    <div class="preview-thumbnail">
+                                        <div class="preview-icon bg-dark rounded-circle">
+                                            <i class="mdi mdi-logout text-danger"></i>
+                                        </div>
+                                    </div>
+                                    <div class="preview-item-content">
+                                        <p class="preview-subject mb-1">Log out</p>
+                                    </div>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+              <span class="mdi mdi-format-line-spacing"></span>
+            </button>
+                </div>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <div class="row">
+
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    {%for msg in get_flashed_messages()%} {% if "can't" in msg%}
+                                    <p style="color:red;">{{msg}}</p>
+                                    {%elif 'successful' in msg%}
+                                    <p style="color:green;">{{msg}}</p>
+                                    {%endif%} {%endfor%}
+                                    <form class="forms-sample" method="POST" action="">
+
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Send to</label>
+                                            <input type="text" name="email" class="form-control" value="{{data}}" required placeholder="email" style="color:rgb(217, 215, 215);font-weight: bold;">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleSelectGender">Receiver Status</label>
+                                            <select class="form-control" id="exampleSelectGender" name="stats" style="color: rgb(217, 215, 215)">
+                                              <option value="supplier">supplier</option>
+                                              <option value="company">company</option>
+                                              <option value="admin">admin</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleTextarea1" style="color:green;">Message</label>
+                                            <textarea class="form-control" name="mesg" placeholder="write ..." id="exampleTextarea1" required rows="4" style="color: rgb(217, 215, 215)"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mr-2">Send</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:../../partials/_footer.html -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © Digital Procurement 2022</span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../static/dash/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="../static/dash/assets/js/off-canvas.js"></script>
+    <script src="../static/dash/assets/js/hoverable-collapse.js"></script>
+    <script src="../static/dash/assets/js/misc.js"></script>
+    <script src="../static/dash/assets/js/settings.js"></script>
+    <script src="../static/dash/assets/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+</body>
+
+</html>
